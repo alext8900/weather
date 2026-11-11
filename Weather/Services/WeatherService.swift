@@ -29,11 +29,9 @@ struct WeatherService: Sendable {
         guard let url = components.url else { throw WeatherError.invalidURL }
 
         let data = try await fetch(url)
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
         let response: ForecastResponse
         do {
-            response = try decoder.decode(ForecastResponse.self, from: data)
+            response = try JSONDecoder().decode(ForecastResponse.self, from: data)
         } catch {
             throw WeatherError.malformedData
         }
