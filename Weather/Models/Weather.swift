@@ -71,6 +71,8 @@ struct ForecastResponse: Decodable {
     let hourly: Hourly
     let daily: Daily
 
+    // Explicit keys: JSONDecoder's convertFromSnakeCase maps "temperature_2m" to
+    // "temperature2M" (it capitalises "2m"), so it cannot be used for these names.
     struct Current: Decodable {
         let time: String
         let temperature2m: Double
@@ -83,6 +85,20 @@ struct ForecastResponse: Decodable {
         let windDirection10m: Double
         let surfacePressure: Double
         let cloudCover: Double
+
+        enum CodingKeys: String, CodingKey {
+            case time
+            case temperature2m = "temperature_2m"
+            case relativeHumidity2m = "relative_humidity_2m"
+            case apparentTemperature = "apparent_temperature"
+            case isDay = "is_day"
+            case precipitation
+            case weatherCode = "weather_code"
+            case windSpeed10m = "wind_speed_10m"
+            case windDirection10m = "wind_direction_10m"
+            case surfacePressure = "surface_pressure"
+            case cloudCover = "cloud_cover"
+        }
     }
 
     struct Hourly: Decodable {
@@ -91,6 +107,14 @@ struct ForecastResponse: Decodable {
         let weatherCode: [Int?]
         let precipitationProbability: [Int?]
         let isDay: [Int?]
+
+        enum CodingKeys: String, CodingKey {
+            case time
+            case temperature2m = "temperature_2m"
+            case weatherCode = "weather_code"
+            case precipitationProbability = "precipitation_probability"
+            case isDay = "is_day"
+        }
     }
 
     struct Daily: Decodable {
@@ -102,6 +126,17 @@ struct ForecastResponse: Decodable {
         let sunset: [String?]
         let uvIndexMax: [Double?]
         let precipitationProbabilityMax: [Int?]
+
+        enum CodingKeys: String, CodingKey {
+            case time
+            case weatherCode = "weather_code"
+            case temperature2mMax = "temperature_2m_max"
+            case temperature2mMin = "temperature_2m_min"
+            case sunrise
+            case sunset
+            case uvIndexMax = "uv_index_max"
+            case precipitationProbabilityMax = "precipitation_probability_max"
+        }
     }
 }
 
